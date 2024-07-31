@@ -1,5 +1,4 @@
-﻿using pricer_checker.Models.Entities;
-using pricer_checker.Models.Enums;
+﻿using pricer_checker.Models.Enums;
 
 namespace pricer_checker.Models.Dtos
 {

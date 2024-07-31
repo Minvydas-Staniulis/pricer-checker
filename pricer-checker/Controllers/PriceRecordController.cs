@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using pricer_checker.Data;
 using pricer_checker.Interfaces;
 using pricer_checker.Models.Dtos;
