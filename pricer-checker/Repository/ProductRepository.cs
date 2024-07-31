@@ -27,5 +27,10 @@ namespace pricer_checker.Repository
             return await products.ToListAsync();
         }
 
+        public Task<bool> ProductExists(Guid id)
+        {
+            return _context.Products.AnyAsync(p => p.Id == id);
+        }
+
     }
 }

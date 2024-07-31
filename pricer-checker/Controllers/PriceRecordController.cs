@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pricer_checker.Data;
+using pricer_checker.Interfaces;
 using pricer_checker.Models.Dtos;
 using pricer_checker.Models.Entities;
 
@@ -11,10 +12,12 @@ namespace pricer_checker.Controllers
     public class PriceRecordController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IProductRepository _productRepo;
 
-        public PriceRecordController(ApplicationDbContext dbContext)
+        public PriceRecordController(ApplicationDbContext dbContext, IProductRepository productRepo)
         {
             _dbContext = dbContext;
+            _productRepo = productRepo;
         }
 
         [HttpGet]
@@ -42,13 +45,12 @@ namespace pricer_checker.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPriceRecord(AddPriceRecordDto addPriceRecordDto)
+        [Route("{productId:guid}")]
+        public async Task<IActionResult> AddPriceRecord(AddPriceRecordDto addPriceRecordDto, Guid productId)
         {
-            var product = _dbContext.Products.Find(addPriceRecordDto.ProductId);
-
-            if (product == null)
+            if (!await _productRepo.ProductExists(productId))
             {
-                return NotFound($"Product with Id {addPriceRecordDto.ProductId} not found.");
+                return BadRequest($"No Products found with ProductId {productId}");
             }
 
             var priceRecordEntity = new PriceRecord()
