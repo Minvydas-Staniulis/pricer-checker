@@ -11,5 +11,6 @@ namespace pricer_checker.Data
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<PriceRecord> PriceRecords { get; set; }
     }
 }

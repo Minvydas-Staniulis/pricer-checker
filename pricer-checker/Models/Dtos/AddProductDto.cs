@@ -1,4 +1,5 @@
-﻿using pricer_checker.Models.Enums;
+﻿using pricer_checker.Models.Entities;
+using pricer_checker.Models.Enums;
 
 namespace pricer_checker.Models.Dtos
 {
@@ -6,8 +7,6 @@ namespace pricer_checker.Models.Dtos
     {
         public required string Name { get; set; }
         public required CategoryEnum Category { get; set; }
-        public decimal Price { get; set; }
-        public DateTime Date { get; set; }
         public required string ImageUri { get; set; }
     }
 }

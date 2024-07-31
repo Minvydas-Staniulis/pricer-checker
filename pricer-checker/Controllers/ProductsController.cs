@@ -48,8 +48,6 @@ namespace pricer_checker.Controllers
             {
                 Name = addProductDto.Name,
                 Category = addProductDto.Category,
-                Price = addProductDto.Price,
-                Date = addProductDto.Date,
                 ImageUri = addProductDto.ImageUri,
             };
 
@@ -57,6 +55,23 @@ namespace pricer_checker.Controllers
             dbContext.SaveChanges();
 
             return Ok(productEntity); 
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public IActionResult DeleteProduct(Guid id)
+        {
+            var productModel = dbContext.Products.FirstOrDefault(x => x.Id == id);
+
+            if (productModel == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Products.Remove(productModel);
+            dbContext.SaveChanges();
+
+            return NoContent();
         }
     }
 }

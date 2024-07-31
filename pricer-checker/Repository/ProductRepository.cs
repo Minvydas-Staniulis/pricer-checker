@@ -19,14 +19,9 @@ namespace pricer_checker.Repository
         {
             var products = _context.Products.AsQueryable();
 
-            if(!string.IsNullOrWhiteSpace(query.Name))
+            if (!string.IsNullOrWhiteSpace(query.Name))
             {
                 products = products.Where(p => p.Name.Contains(query.Name));
-            }
-
-            if(query.Price.HasValue)
-            {
-                products = products.Where(p => p.Price == query.Price.Value);
             }
 
             return await products.ToListAsync();
