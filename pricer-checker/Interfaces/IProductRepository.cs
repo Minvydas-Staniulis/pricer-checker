@@ -1,4 +1,5 @@
 ﻿using pricer_checker.Helpers;
+using pricer_checker.Models.Dtos;
 using pricer_checker.Models.Entities;
 
 namespace pricer_checker.Interfaces
@@ -6,6 +7,9 @@ namespace pricer_checker.Interfaces
     public interface IProductRepository
     {
         Task<List<Product>> GetAllAsync(QueryObject query);
+        Task<Product> GetByIdAsync(Guid id);
+
+        Task<Product> AddProductAsync(AddProductDto addProductDto);
         Task<bool> ProductExists(Guid id);
     }
 }

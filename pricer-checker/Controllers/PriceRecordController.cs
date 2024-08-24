@@ -3,6 +3,7 @@ using pricer_checker.Data;
 using pricer_checker.Interfaces;
 using pricer_checker.Models.Dtos;
 using pricer_checker.Models.Entities;
+using pricer_checker.Services;
 
 namespace pricer_checker.Controllers
 {
@@ -12,11 +13,13 @@ namespace pricer_checker.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IProductRepository _productRepo;
+        private readonly PriceChangeService _priceChangeService;
 
-        public PriceRecordController(ApplicationDbContext dbContext, IProductRepository productRepo)
+        public PriceRecordController(ApplicationDbContext dbContext, IProductRepository productRepo, PriceChangeService priceChangeService)
         {
             _dbContext = dbContext;
             _productRepo = productRepo;
+            _priceChangeService = priceChangeService;
         }
 
         [HttpGet]
@@ -65,6 +68,12 @@ namespace pricer_checker.Controllers
             return Ok(priceRecordEntity);
         }
 
+        [HttpGet("price-change")]
+        public async Task<IActionResult> GetPriceChange(Guid productId, int days)
+        {
+            var change = await _priceChangeService.CalculatePriceChange(productId, TimeSpan.FromDays(days));
+            return Ok(new { priceChange = change });
+        }
 
 
     }

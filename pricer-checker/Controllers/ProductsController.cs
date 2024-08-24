@@ -29,9 +29,9 @@ namespace pricer_checker.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
-        public IActionResult GetProductById(Guid id)
+        public async Task<IActionResult> GetProductById(Guid id)
         {
-            var product = dbContext.Products.Find(id);
+            var product = await _productRepository.GetByIdAsync(id);
 
             if (product == null)
             {
@@ -42,19 +42,16 @@ namespace pricer_checker.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct(AddProductDto addProductDto)
+        public async Task<IActionResult> AddProduct(AddProductDto addProductDto)
         {
-            var productEntity = new Product()
+            if(!ModelState.IsValid)
             {
-                Name = addProductDto.Name,
-                Category = addProductDto.Category,
-                ImageUri = addProductDto.ImageUri,
-            };
+                return BadRequest(ModelState);
+            }
 
-            dbContext.Products.Add(productEntity);
-            dbContext.SaveChanges();
+            var createdProduct = await _productRepository.AddProductAsync(addProductDto);
 
-            return Ok(productEntity); 
+            return Ok(createdProduct); 
         }
 
         [HttpDelete]
