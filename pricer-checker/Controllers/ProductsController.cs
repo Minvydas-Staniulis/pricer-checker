@@ -65,6 +65,9 @@ namespace pricer_checker.Controllers
                 return NotFound();
             }
 
+            var priceRecords = dbContext.PriceRecords.Where(pr => pr.ProductId == id).ToList();
+
+            dbContext.PriceRecords.RemoveRange(priceRecords);
             dbContext.Products.Remove(productModel);
             dbContext.SaveChanges();
 
