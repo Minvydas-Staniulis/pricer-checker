@@ -17,7 +17,7 @@ namespace pricer_checker.Repository
             _context = context;
         }
 
-        public async Task<List<Product>> GetAllAsync(QueryObject query)
+        public async Task<List<ProductDto>> GetAllAsync(QueryObject query)
         {
             var products = _context.Products.AsQueryable();
 
@@ -26,7 +26,23 @@ namespace pricer_checker.Repository
                 products = products.Where(p => p.Name.Contains(query.Name));
             }
 
-            return await products.ToListAsync();
+            var productsWithPriceRecords = await products.Select(p => new
+            {
+                Product = p,
+                LastPriceRecord = _context.PriceRecords.Where(pr => pr.ProductId == p.Id).OrderByDescending(pr => pr.Date).FirstOrDefault()
+            }).ToListAsync();
+
+            var result = productsWithPriceRecords.Select(p => new ProductDto
+            {
+                Id = p.Product.Id,
+                Name = p.Product.Name,
+                Category = p.Product.Category,
+                ImageUri = p.Product.ImageUri,
+                LastPrice = p.LastPriceRecord?.Price,
+                LastPriceDate = p.LastPriceRecord?.Date
+            }).ToList();
+
+            return result;
         }
 
         public async Task<Product> GetByIdAsync(Guid id)

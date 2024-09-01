@@ -6,7 +6,7 @@ namespace pricer_checker.Interfaces
 {
     public interface IProductRepository
     {
-        Task<List<Product>> GetAllAsync(QueryObject query);
+        Task<List<ProductDto>> GetAllAsync(QueryObject query);
         Task<Product> GetByIdAsync(Guid id);
 
         Task<Product> AddProductAsync(AddProductDto addProductDto);
