@@ -45,9 +45,33 @@ namespace pricer_checker.Repository
             return result;
         }
 
-        public async Task<Product> GetByIdAsync(Guid id)
+        public async Task<ProductDto> GetByIdAsync(Guid id)
         {
-            return await _context.Products.FindAsync(id);
+            var product = await _context.Products
+                                        .Where(p => p.Id == id)
+                                        .FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            var lastPriceRecord = await _context.PriceRecords
+                                                .Where(pr => pr.ProductId == id)
+                                                .OrderByDescending(pr => pr.Date)
+                                                .FirstOrDefaultAsync();
+
+            var result = new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Category = product.Category,
+                ImageUri = product.ImageUri,
+                LastPrice = lastPriceRecord?.Price,
+                LastPriceDate = lastPriceRecord?.Date
+            };
+
+            return result;
         }
 
         public async Task<Product> AddProductAsync(AddProductDto addProductDto)
